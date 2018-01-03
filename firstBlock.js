@@ -31,11 +31,30 @@ class Blockchain{
     newBlock.previousHash = this.getLatestBlock().hash;
     newBlock.hash = newBlock.calculateHash();
     this.chain.push(newBlock)
-  };
+  }
+
+  isChainValid(){
+    for(let i = 1; i < this.chain.length; i++){
+      const currentBlock = this.chain[i];
+      const previousBlock = this.chain[i - 1];
+
+      if (currentBlock.hash !== currentBlock.calculateHash()) {
+        return false;
+      }
+
+      if(currentBlock.previousHash !== previousBlock.hash){
+        return false;
+      }
+    }
+
+    return true;
+  }
 }
 
 let nicoCoin = new Blockchain();
 nicoCoin.addBlock(new Block(1, "02/01/17", { amount: 4}));
 nicoCoin.addBlock(new Block(2, "04/01/17", { amount: 8}));
 
-console.log(JSON.stringify(nicoCoin, null, 4));
+console.log('Is Blockchain Valid? ' + nicoCoin.isChainValid());
+
+// console.log(JSON.stringify(nicoCoin, null, 4));
